@@ -1,0 +1,25 @@
+package com.example.oracledemo.pojo;
+
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@KeySequence(value="BOOK_BORROW_ID",dbType = DbType.ORACLE)
+public class BookBorrow {
+    @TableId(type = IdType.INPUT)
+    private long id;
+    private long bookCard;
+    private long bookInfoId;
+    private Date createTime;
+}

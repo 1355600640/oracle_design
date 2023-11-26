@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.oracledemo.mapper.BookBorrowMapper">
+<resultMap id="bookBorrowVo" type="com.example.oracledemo.vo.BookBorrowVo">
+    <result column="BOOK_ID" property="bookId" />
+    <result column="BOOK_NAME" property="bookName" />
+    <result javaType="java.lang.String" column="CATEGORY_NAME" property="categoryName" />
+    <!--  association中 ，property：tid在ProductInfo对应的属性名，javaType：tid属于哪个类  -->
+    <association  property="student" javaType="com.example.oracledemo.pojo.Student">
+        <!--  下面的result中，column：数据库type的字段名，property：在实体类ProductType中属性名，这两者相互对应  -->
+        <result column="BOOK_CARD" property="bookCard" />
+        <result column="USERNAME" property="username" />
+        <result column="CLASSNAME" property="classname" />
+        <result column="STUDENT_ID" property="studentId" />
+        <result column="SEX" property="sex" />
+    </association>
+</resultMap>
+    <select id="getBookBorrow" resultMap="bookBorrowVo">
+        SELECT
+            bi.id as BOOK_ID,
+            bi.BOOKNAME as BOOK_NAME,
+            bi.CATEGORY_NAME as CATEGORY_NAME ,
+            st.BOOK_CARD,
+            st.USERNAME,
+            st.CLASSNAME,
+            st.STUDENT_ID,
+            st.SEX
+        FROM
+            BOOK_BORROW br
+        INNER JOIN BOOK_INFO bi ON br.BOOK_INFO_ID = bi.ID
+        INNER JOIN STUDENT st ON st.book_card = br.book_card
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="bookName!=null&amp;&amp;bookName!=''">
+                 and instr(BOOKNAME,#{bookName})>0
+            </if>
+            <if test="studentId!=0">
+                and st.STUDENT_ID = #{studentId}
+            </if>
+            <if test="categoryName!=null&amp;&amp;categoryName!=''">
+                and instr(CATEGORY_NAME,#{categoryName})>0
+            </if>
+        </trim>
+    </select>
+
+    <sql id="Base_Column_List">
+        id,title,url,
+        body,is_skip,create_time
+    </sql>
+</mapper>
